@@ -1,0 +1,24 @@
+{
+    "name": "pkoin/php-dilicom",
+    "type": "library",
+    "description": "PHP client to connect to the Dilicom Hub",
+    "keywords": ["dilicom", "http", "rest", "web service", "ebook", "onix"],
+    "license": "WTFPL v2.0",
+    "require": {
+        "guzzle/guzzle": "dev-master"
+    },
+    "require-dev": {
+        "atoum/atoum": "dev-master"
+    },
+    "authors": [
+        {
+            "name": "Julien Fusco",
+            "email": "pkoin.koin@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Dilicom": "src/"
+        }
+    }
+}
