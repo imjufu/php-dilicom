@@ -35,7 +35,7 @@ class RestClient
     protected $password;
 
     /**
-     * Does the ssl certificate should be checked?
+     * Should the ssl certificate be checked?
      * @var boolean
      */
     protected $should_verify_ssl=true;
