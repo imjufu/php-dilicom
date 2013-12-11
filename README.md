@@ -13,45 +13,48 @@ Dilicom Hub API: https://hub-dilicom.centprod.com/documentation/
 # Very simple!
 $client = new Dilicom\RestClient("MY_GLN", "MY_PASSWORD", Dilicom\RestClient::ENV_PROD);
 echo $client->getOnixNotice("9782756406053");
+```
 
-// <?xml version="1.0" encoding="UTF-8"?><ONIXMessage release="3.0" xmlns="http://www.editeur.org/onix/3.0/reference">
-// <Header>
-//     ...
-// </Header>
-// <Product>
-//     <RecordReference>EDEN8564-epub</RecordReference>
-//     <NotificationType>02</NotificationType>
-//     <ProductIdentifier>
-//         <ProductIDType>03</ProductIDType>
-//         <IDValue>9782756406053</IDValue>
-//     </ProductIdentifier>
-//     <DescriptiveDetail>
-//         <ProductComposition>00</ProductComposition>
-//         <ProductForm>EA</ProductForm>
-//         <ProductFormDetail>E101</ProductFormDetail>
-//         <ProductFormDetail>E200</ProductFormDetail>
-//         <EpubTechnicalProtection>03</EpubTechnicalProtection>
-//         <EpubUsageConstraint>
-//             <EpubUsageType>02</EpubUsageType>
-//             <EpubUsageStatus>03</EpubUsageStatus>
-//         </EpubUsageConstraint>
-//         <EpubUsageConstraint>
-//             <EpubUsageType>03</EpubUsageType>
-//             <EpubUsageStatus>03</EpubUsageStatus>
-//         </EpubUsageConstraint>
-//         <EpubUsageConstraint>
-//             <EpubUsageType>04</EpubUsageType>
-//             <EpubUsageStatus>02</EpubUsageStatus>
-//             <EpubUsageLimit>
-//                 <Quantity>6</Quantity>
-//                 <EpubUsageUnit>06</EpubUsageUnit>
-//             </EpubUsageLimit>
-//         </EpubUsageConstraint>
-//         <TitleDetail>
-//         <TitleType>01</TitleType>
-//         <TitleElement>
-//             <TitleElementLevel>01</TitleElementLevel>
-//             <TitleText>L'Apprenti assassin</TitleText>
+Output:
+```xml
+<?xml version="1.0" encoding="UTF-8"?><ONIXMessage release="3.0" xmlns="http://www.editeur.org/onix/3.0/reference">
+<Header>
+    ...
+</Header>
+<Product>
+    <RecordReference>EDEN8564-epub</RecordReference>
+    <NotificationType>02</NotificationType>
+    <ProductIdentifier>
+        <ProductIDType>03</ProductIDType>
+        <IDValue>9782756406053</IDValue>
+    </ProductIdentifier>
+    <DescriptiveDetail>
+        <ProductComposition>00</ProductComposition>
+        <ProductForm>EA</ProductForm>
+        <ProductFormDetail>E101</ProductFormDetail>
+        <ProductFormDetail>E200</ProductFormDetail>
+        <EpubTechnicalProtection>03</EpubTechnicalProtection>
+        <EpubUsageConstraint>
+            <EpubUsageType>02</EpubUsageType>
+            <EpubUsageStatus>03</EpubUsageStatus>
+        </EpubUsageConstraint>
+        <EpubUsageConstraint>
+            <EpubUsageType>03</EpubUsageType>
+            <EpubUsageStatus>03</EpubUsageStatus>
+        </EpubUsageConstraint>
+        <EpubUsageConstraint>
+            <EpubUsageType>04</EpubUsageType>
+            <EpubUsageStatus>02</EpubUsageStatus>
+            <EpubUsageLimit>
+                <Quantity>6</Quantity>
+                <EpubUsageUnit>06</EpubUsageUnit>
+            </EpubUsageLimit>
+        </EpubUsageConstraint>
+        <TitleDetail>
+        <TitleType>01</TitleType>
+        <TitleElement>
+            <TitleElementLevel>01</TitleElementLevel>
+            <TitleText>L'Apprenti assassin</TitleText>
 ```
 
 ## Installation
@@ -74,7 +77,7 @@ require 'vendor/autoload.php';
 
 ## Available APIs
 
-* getNotice: Get an ONIX notice for a given EAN13
+* onix/getNotice?ean13=<ean13>&glnDistributor=<gln>: Get an ONIX notice for a given EAN13
 
 ## You want to contribute?
 
