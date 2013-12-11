@@ -38,7 +38,7 @@ class RestClient
      * Does the ssl certificate should be checked?
      * @var boolean
      */
-    protected $sould_verify_ssl=true;
+    protected $should_verify_ssl=true;
 
     /**
      * Environement. Possible values: test, production
@@ -103,7 +103,7 @@ class RestClient
         if ($this->env == self::ENV_PROD) {
             throw new \InvalidArgumentException("SSL certificate validation is mandatory in production!");
         }
-        $this->sould_verify_ssl = false;
+        $this->should_verify_ssl = false;
         return $this;
     }
 
@@ -141,7 +141,7 @@ class RestClient
     {
         return $this->connector->get("/v1/hub-numerique-api/$api", null, array_merge(array(
             "auth"      => array($this->user, $this->password),
-            "verify"    => $this->sould_verify_ssl,
+            "verify"    => $this->should_verify_ssl,
             "debug"     => $this->enable_debug
         ), $options));
     }
