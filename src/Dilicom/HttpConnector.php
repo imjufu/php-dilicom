@@ -37,6 +37,14 @@ class HttpConnector implements ConnectorInterface
      */
     public function get($uri=null, $headers=null, $options=array())
     {
+        // To be compatible with Guzzle 3.7.4, we have to remove the "debug" option
+        // otherwise this will output a debug message even if the value is false :(
+        // @see https://github.com/guzzle/guzzle/releases/tag/v3.8.0
+        // "The debug request parameter now checks if it is truthy rather than if it exists"
+        if (isset($options["debug"]) && true !== $options["debug"]) {
+            unset($options["debug"]);
+        }
+
         $request = $this->client->get($uri, $headers, $options);
         return $request->send()->getBody(true);
     }
