@@ -5,7 +5,7 @@
     "keywords": ["dilicom", "http", "rest", "web service", "ebook", "onix"],
     "license": "WTFPL v2.0",
     "require": {
-        "guzzle/guzzle": "dev-master"
+        "guzzle/guzzle": ">=3"
     },
     "require-dev": {
         "atoum/atoum": "dev-master"
