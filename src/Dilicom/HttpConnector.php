@@ -34,6 +34,7 @@ class HttpConnector implements ConnectorInterface
      * @param  array    $headers    HTTP headers to set on request
      * @param  array    $options    Request options: debug, SSL cert validation,...
      * @return string
+     * @throws Exception If the response is invalid
      */
     public function get($uri=null, $headers=null, $options=array())
     {
@@ -45,7 +46,13 @@ class HttpConnector implements ConnectorInterface
             unset($options["debug"]);
         }
 
-        $request = $this->client->get($uri, $headers, $options);
-        return $request->send()->getBody(true);
+        try {
+            $request = $this->client->get($uri, $headers, $options);
+            $response_body = $request->send()->getBody(true);
+        } catch (\Exception $e) {
+            throw new Exception($e->getMessage(), 0, $e);
+        }
+
+        return $response_body;
     }
 }
