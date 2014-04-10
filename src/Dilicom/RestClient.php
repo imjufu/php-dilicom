@@ -119,7 +119,7 @@ class RestClient
      */
     protected function checkEbookData(array $ebook)
     {
-        if (empty($ebook["ean13"]) || empty($ebook["glnDistributor"]) || empty($ebook["unitPrice"])) {
+        if (!isset($ebook["ean13"]) || !isset($ebook["glnDistributor"]) || !isset($ebook["unitPrice"])) {
             throw new \InvalidArgumentException("Given ebook is badly formed. Expected something like array('ean13' => 'xxx', 'glnDistributor' => 'xxx', 'unitPrice' => 'x'), got : " . serialize($ebook));
         }
     }
