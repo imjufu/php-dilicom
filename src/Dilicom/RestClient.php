@@ -96,6 +96,8 @@ class RestClient
      * Get the availability for a given EAN13
      *
      * @param  string $ean13
+     * @param  string $glnDistributor
+     * @param  string $unitPrice
      * @return string
      */
     public function getEbookAvailability($ean13, $glnDistributor, $unitPrice)
@@ -115,10 +117,10 @@ class RestClient
      * @param array $ebook
      * @throws InvalidArgumentException if given ebook does not contains necessary values
      */
-    protected function checkEbookData($ebook)
+    protected function checkEbookData(array $ebook)
     {
         if (empty($ebook["ean13"]) || empty($ebook["glnDistributor"]) || empty($ebook["unitPrice"])) {
-            throw new \InvalidArgumentException("Given ebook is badly formed : " . serialize($ebook));
+            throw new \InvalidArgumentException("Given ebook is badly formed. Expected something like array('ean13' => 'xxx', 'glnDistributor' => 'xxx', 'unitPrice' => 'x'), got : " . serialize($ebook));
         }
     }
 
