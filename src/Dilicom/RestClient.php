@@ -138,6 +138,7 @@ class RestClient
             $query["checkAvailabilityLines[$i].glnDistributor"] = $ebook["glnDistributor"];
             $query["checkAvailabilityLines[$i].unitPrice"] = $ebook["unitPrice"];
         }
+
         return $this->request("json/checkAvailability", array(
             "query" => $query,
         ));

@@ -7,6 +7,19 @@ use atoum;
 class RestClient extends atoum\test
 {
 
+    protected $tested_client;
+
+    protected $http_connector_mock;
+
+    public function beforeTestMethod()
+    {
+        $this->mockGenerator->orphanize("__construct");
+        $this->http_connector_mock = new \mock\Dilicom\HttpConnector();
+
+        $this->tested_client = new \Dilicom\RestClient("user", "password", \Dilicom\RestClient::ENV_TEST);
+        $this->tested_client->setConnector($this->http_connector_mock);
+    }
+
     public function testConstructWithABadEnv()
     {
         $this
@@ -24,17 +37,12 @@ class RestClient extends atoum\test
     public function testOnBadlyFormattedEbooksGetEbooksAvailabilitiesThrowsException()
     {
         $response = "Availability response";
-        $this->mockGenerator->orphanize("__construct");
-        $connector = new \mock\Dilicom\HttpConnector();
-        $this->calling($connector)->get = $response;
-
-        $c = new \Dilicom\RestClient("user", "password", \Dilicom\RestClient::ENV_TEST);
-        $c->setConnector($connector);
+        $this->calling($this->http_connector_mock)->get = $response;
 
         $this
             ->exception(
-                function() use ($c) {
-                    $c->getEbooksAvailabilities(array(
+                function() {
+                    $this->tested_client->getEbooksAvailabilities(array(
                         array("9770000000000", "3230000000000", 5),
                     ));
                 }
@@ -45,22 +53,17 @@ class RestClient extends atoum\test
         ;
     }
 
-    public function testWhenCalledProperlyGetEbooksAvailabilitiesReturnsExpectedResult()
+    public function testWhenCalledProperlyGetEbooksAvailabilitiesReturnsCallsDilicomProperlyAndReturnsResult()
     {
         $response = "Availability response";
-        $this->mockGenerator->orphanize("__construct");
-        $connector = new \mock\Dilicom\HttpConnector();
-        $this->calling($connector)->get = $response;
+        $this->calling($this->http_connector_mock)->get = $response;
 
-        $c = new \Dilicom\RestClient("user", "password", \Dilicom\RestClient::ENV_TEST);
-        $c->setConnector($connector);
-
-        $availability = $c->getEbooksAvailabilities(array(
+        $availability = $this->tested_client->getEbooksAvailabilities(array(
             array("ean13" => "9780000000000", "glnDistributor" => "3330000000000", "unitPrice" => 7),
             array("ean13" => "9770000000000", "glnDistributor" => "3230000000000", "unitPrice" => 5),
         ));
 
-        $this->mock($connector)
+        $this->mock($this->http_connector_mock)
              ->call("get")
              ->withArguments(
                 "/v1/hub-numerique-api/json/checkAvailability",
@@ -91,14 +94,9 @@ class RestClient extends atoum\test
     public function testGetEbookAvailability()
     {
         $response = "Availability response";
-        $this->mockGenerator->orphanize("__construct");
-        $connector = new \mock\Dilicom\HttpConnector();
-        $this->calling($connector)->get = $response;
+        $this->calling($this->http_connector_mock)->get = $response;
 
-        $c = new \Dilicom\RestClient("user", "password", \Dilicom\RestClient::ENV_TEST);
-        $c->setConnector($connector);
-
-        $availability = $c->getEbookAvailability("9780000000000", "3330000000000", 749);
+        $availability = $this->tested_client->getEbookAvailability("9780000000000", "3330000000000", 749);
 
         $this
             ->string($availability)
@@ -110,15 +108,10 @@ class RestClient extends atoum\test
     {
         // Mocks the connector to avoid sending real requests
         $response = "Hello World!";
-        $this->mockGenerator->orphanize("__construct");
-        $connector = new \mock\Dilicom\HttpConnector();
-        $this->calling($connector)->get = $response;
-
-        $c = new \Dilicom\RestClient("user", "password", \Dilicom\RestClient::ENV_TEST);
-        $c->setConnector($connector);
+        $this->calling($this->http_connector_mock)->get = $response;
 
         $this
-            ->string($c->getOnixNotice("9780000000000"))
+            ->string($this->tested_client->getOnixNotice("9780000000000"))
                 ->isEqualTo($response)
         ;
     }
@@ -129,7 +122,10 @@ class RestClient extends atoum\test
         $this
             ->object($c->disableSslVerification())
                 ->isEqualTo($c);
+    }
 
+    public function testInProductionDisableSslVerificationThrowsException()
+    {
         $c = new \Dilicom\RestClient("user", "password", \Dilicom\RestClient::ENV_PROD);
         $this
             ->exception(
