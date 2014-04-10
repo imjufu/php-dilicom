@@ -93,6 +93,58 @@ class RestClient
     }
 
     /**
+     * Get the availability for a given EAN13
+     *
+     * @param  string $ean13
+     * @param  string $glnDistributor
+     * @param  string $unitPrice
+     * @return string
+     */
+    public function getEbookAvailability($ean13, $glnDistributor, $unitPrice)
+    {
+        return $this->getEbooksAvailabilities(array(
+            array(
+                "ean13" => $ean13,
+                "glnDistributor" => $glnDistributor,
+                "unitPrice" => $unitPrice
+            )
+        ));
+    }
+
+    /**
+     * Checks if given ebook is well formed
+     *
+     * @param array $ebook
+     * @throws InvalidArgumentException if given ebook does not contains necessary values
+     */
+    protected function checkEbookData(array $ebook)
+    {
+        if (empty($ebook["ean13"]) || empty($ebook["glnDistributor"]) || empty($ebook["unitPrice"])) {
+            throw new \InvalidArgumentException("Given ebook is badly formed. Expected something like array('ean13' => 'xxx', 'glnDistributor' => 'xxx', 'unitPrice' => 'x'), got : " . serialize($ebook));
+        }
+    }
+
+    /**
+     * Asks to Dilicom if given ebooks are available
+     *
+     * @param array $ebooks
+     */
+    public function getEbooksAvailabilities($ebooks)
+    {
+        $query = array();
+        foreach ($ebooks as $i => $ebook) {
+            $this->checkEbookData($ebook);
+            $query["checkAvailabilityLines[$i].ean13"] = $ebook["ean13"];
+            $query["checkAvailabilityLines[$i].glnDistributor"] = $ebook["glnDistributor"];
+            $query["checkAvailabilityLines[$i].unitPrice"] = $ebook["unitPrice"];
+        }
+
+        return $this->request("json/checkAvailability", array(
+            "query" => $query,
+        ));
+    }
+
+    /**
      * Disable the SSL certificate verification
      *
      * @return RestClient
