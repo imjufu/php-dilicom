@@ -66,7 +66,7 @@ The recommended way to install php-dilicom is through [Composer](http://getcompo
 curl -sS https://getcomposer.org/installer | php
 
 # Add php-dilicom as a dependency
-php composer.phar require pkoin/php-dilicom:dev-master
+php composer.phar require pkoin/php-dilicom
 ```
 
 After installing, you need to require Composer's autoloader:
