@@ -59,8 +59,8 @@ class RestClient extends atoum\test
         $this->calling($this->http_connector_mock)->get = $response;
 
         $availability = $this->tested_client->getEbooksAvailabilities(array(
-            array("ean13" => "9780000000000", "glnDistributor" => "3330000000000", "unitPrice" => 0),
-            array("ean13" => "9770000000000", "glnDistributor" => "3230000000000", "unitPrice" => 5),
+            array("ean13" => "9780000000000", "glnDistributor" => "3330000000000", "unitPrice" => 0, "unitPriceExcludingTax" => 0),
+            array("ean13" => "9770000000000", "glnDistributor" => "3230000000000", "unitPrice" => 5, "unitPriceExcludingTax" => 4),
         ));
 
         $this->mock($this->http_connector_mock)
@@ -76,9 +76,11 @@ class RestClient extends atoum\test
                         "checkAvailabilityLines[0].ean13" => "9780000000000",
                         "checkAvailabilityLines[0].glnDistributor" => "3330000000000",
                         "checkAvailabilityLines[0].unitPrice" => "0",
+                        "checkAvailabilityLines[0].unitPriceExcludingTax" => "0",
                         "checkAvailabilityLines[1].ean13" => "9770000000000",
                         "checkAvailabilityLines[1].glnDistributor" => "3230000000000",
                         "checkAvailabilityLines[1].unitPrice" => "5",
+                        "checkAvailabilityLines[1].unitPriceExcludingTax" => "4",
                     )
                 )
              )
@@ -96,7 +98,7 @@ class RestClient extends atoum\test
         $response = "Availability response";
         $this->calling($this->http_connector_mock)->get = $response;
 
-        $availability = $this->tested_client->getEbookAvailability("9780000000000", "3330000000000", 749);
+        $availability = $this->tested_client->getEbookAvailability("9780000000000", "3330000000000", 749, 600);
 
         $this
             ->string($availability)
