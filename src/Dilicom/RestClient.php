@@ -35,6 +35,12 @@ class RestClient
     protected $password;
 
     /**
+     * Reseller's country, ISO 3166-1
+     * @var string
+     */
+    protected $resellerCountry;
+
+    /**
      * Should the ssl certificate be checked?
      * @var boolean
      */
@@ -132,6 +138,11 @@ class RestClient
     public function getEbooksAvailabilities($ebooks)
     {
         $query = array();
+
+        if (!empty($this->resellerCountry)) {
+            $query['country'] = $this->resellerCountry;
+        }
+
         foreach ($ebooks as $i => $ebook) {
             $this->checkEbookData($ebook);
             $query["checkAvailabilityLines[$i].ean13"] = $ebook["ean13"];
@@ -179,6 +190,17 @@ class RestClient
     public function setConnector(ConnectorInterface $connector)
     {
         $this->connector = $connector;
+        return $this;
+    }
+
+    /**
+     * @param string $resellerCountry
+     *
+     * @return $this
+     */
+    public function setResellerCountry($resellerCountry)
+    {
+        $this->resellerCountry = $resellerCountry;
         return $this;
     }
 
