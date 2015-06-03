@@ -35,6 +35,12 @@ class RestClient
     protected $password;
 
     /**
+     * Reseller's country, ISO 3166-1
+     * @var string
+     */
+    protected $resellerCountry;
+
+    /**
      * Should the ssl certificate be checked?
      * @var boolean
      */
@@ -82,13 +88,20 @@ class RestClient
     /**
      * Get the ONIX notice for a given EAN13
      *
-     * @param  string $ean13
+     * @param string $ean13
+     * @param string $glnContractor
+     * @param string $glnDistributor
+     *
      * @return string
      */
-    public function getOnixNotice($ean13)
+    public function getOnixNotice($ean13, $glnContractor, $glnDistributor)
     {
         return $this->request("onix/getNotice", array(
-            "query" => array("ean13" => $ean13),
+            "query" => array(
+                "glnContractor" => $glnContractor,
+                "ean13" => $ean13,
+                "glnDistributor" => $glnDistributor,
+            ),
         ));
     }
 
@@ -97,16 +110,19 @@ class RestClient
      *
      * @param  string $ean13
      * @param  string $glnDistributor
-     * @param  string $unitPrice
+     * @param  int    $unitPrice
+     * @param  int    $unitPriceExcludingTax
+     *
      * @return string
      */
-    public function getEbookAvailability($ean13, $glnDistributor, $unitPrice)
+    public function getEbookAvailability($ean13, $glnDistributor, $unitPrice, $unitPriceExcludingTax)
     {
         return $this->getEbooksAvailabilities(array(
             array(
                 "ean13" => $ean13,
                 "glnDistributor" => $glnDistributor,
-                "unitPrice" => $unitPrice
+                "unitPrice" => $unitPrice,
+                "unitPriceExcludingTax" => $unitPriceExcludingTax,
             )
         ));
     }
@@ -119,8 +135,8 @@ class RestClient
      */
     protected function checkEbookData(array $ebook)
     {
-        if (!isset($ebook["ean13"], $ebook["glnDistributor"], $ebook["unitPrice"])) {
-            throw new \InvalidArgumentException("Given ebook is badly formed. Expected something like array('ean13' => 'xxx', 'glnDistributor' => 'xxx', 'unitPrice' => 'x'), got : " . serialize($ebook));
+        if (!isset($ebook["ean13"], $ebook["glnDistributor"], $ebook["unitPrice"], $ebook["unitPriceExcludingTax"])) {
+            throw new \InvalidArgumentException("Given ebook is badly formed. Expected something like array('ean13' => 'xxx', 'glnDistributor' => 'xxx', 'unitPrice' => 'x', 'unitPriceExcludingTax' => 'x'), got : " . serialize($ebook));
         }
     }
 
@@ -132,11 +148,17 @@ class RestClient
     public function getEbooksAvailabilities($ebooks)
     {
         $query = array();
+
+        if (!empty($this->resellerCountry)) {
+            $query['country'] = $this->resellerCountry;
+        }
+
         foreach ($ebooks as $i => $ebook) {
             $this->checkEbookData($ebook);
             $query["checkAvailabilityLines[$i].ean13"] = $ebook["ean13"];
             $query["checkAvailabilityLines[$i].glnDistributor"] = $ebook["glnDistributor"];
             $query["checkAvailabilityLines[$i].unitPrice"] = $ebook["unitPrice"];
+            $query["checkAvailabilityLines[$i].unitPriceExcludingTax"] = $ebook["unitPriceExcludingTax"];
         }
 
         return $this->request("json/checkAvailability", array(
@@ -183,6 +205,17 @@ class RestClient
     }
 
     /**
+     * @param string $resellerCountry
+     *
+     * @return $this
+     */
+    public function setResellerCountry($resellerCountry)
+    {
+        $this->resellerCountry = $resellerCountry;
+        return $this;
+    }
+
+    /**
      * Requests Dilicom
      *
      * @param  string $api      API Dilicom
@@ -191,10 +224,11 @@ class RestClient
      */
     protected function request($api, $options=array())
     {
-        return $this->connector->get("/v1/hub-numerique-api/$api", null, array_merge(array(
+        return $this->connector->get("/v3/hub-numerique-api/$api", null, array_merge(array(
             "auth"      => array($this->user, $this->password),
             "verify"    => $this->should_verify_ssl,
             "debug"     => $this->enable_debug
         ), $options));
     }
+
 }
