@@ -66,7 +66,7 @@ class RestClient extends atoum\test
         $this->mock($this->http_connector_mock)
              ->call("get")
              ->withArguments(
-                "/v1/hub-numerique-api/json/checkAvailability",
+                "/v3/hub-numerique-api/json/checkAvailability",
                 null,
                 array(
                     "auth" => array("user", "password"),

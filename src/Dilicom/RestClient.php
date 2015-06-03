@@ -191,10 +191,11 @@ class RestClient
      */
     protected function request($api, $options=array())
     {
-        return $this->connector->get("/v1/hub-numerique-api/$api", null, array_merge(array(
+        return $this->connector->get("/v3/hub-numerique-api/$api", null, array_merge(array(
             "auth"      => array($this->user, $this->password),
             "verify"    => $this->should_verify_ssl,
             "debug"     => $this->enable_debug
         ), $options));
     }
+
 }
