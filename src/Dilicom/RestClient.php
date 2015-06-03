@@ -88,13 +88,20 @@ class RestClient
     /**
      * Get the ONIX notice for a given EAN13
      *
-     * @param  string $ean13
+     * @param string $ean13
+     * @param string $glnContractor
+     * @param string $glnDistributor
+     *
      * @return string
      */
-    public function getOnixNotice($ean13)
+    public function getOnixNotice($ean13, $glnContractor, $glnDistributor)
     {
         return $this->request("onix/getNotice", array(
-            "query" => array("ean13" => $ean13),
+            "query" => array(
+                "glnContractor" => $glnContractor,
+                "ean13" => $ean13,
+                "glnDistributor" => $glnDistributor,
+            ),
         ));
     }
 

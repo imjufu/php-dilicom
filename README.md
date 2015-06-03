@@ -12,7 +12,7 @@ Dilicom Hub API: https://hub-dilicom.centprod.com/documentation/
 ```php
 # Very simple!
 $client = new Dilicom\RestClient("MY_GLN", "MY_PASSWORD", Dilicom\RestClient::ENV_PROD);
-echo $client->getOnixNotice("9782756406053");
+echo $client->getOnixNotice("9782756406053", "GLN_CONTRACTOR", "GLN_DISTRIBUTOR");
 ```
 
 Output:
@@ -77,7 +77,7 @@ require 'vendor/autoload.php';
 
 ## Available APIs
 
-* onix/getNotice?ean13=<ean13>&glnDistributor=<gln>: Get an ONIX notice for a given EAN13
+* onix/getNotice?ean13=<ean13>&glnDistributor=<gln>&glnDistributor=<gln>: Get an ONIX notice for a given EAN13
 
 ## You want to contribute?
 

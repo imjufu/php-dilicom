@@ -113,7 +113,7 @@ class RestClient extends atoum\test
         $this->calling($this->http_connector_mock)->get = $response;
 
         $this
-            ->string($this->tested_client->getOnixNotice("9780000000000"))
+            ->string($this->tested_client->getOnixNotice("9780000000000", "gln123", "gln456"))
                 ->isEqualTo($response)
         ;
     }
